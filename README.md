@@ -1,5 +1,5 @@
 ## CloudFront Dynamic Content Websites
-[Amazon CloudFront](https://aws.amazon.com/cloudfront/) can also be used for [dynamic content delivery](https://aws.amazon.com/cloudfront/dynamic-content/). These are sites with personalized and dynamic web content that are not cacheable.  Examples include blog, e-commerce, news, travel and retail web sites.
+[Amazon CloudFront](https://aws.amazon.com/cloudfront/) can be used for [dynamic content delivery](https://aws.amazon.com/cloudfront/dynamic-content/). These are sites with personalized and dynamic web content that are not cacheable.  Examples include blog, e-commerce, news, travel and retail web sites.
 
 While dynamic content are not cacheable on CloudFront edge locations, static content in web pages (such as javascript, stylesheets, fonts and images) can be cached by CloudFront for performance. However, additional custom cache policies is required for different file types. 
 

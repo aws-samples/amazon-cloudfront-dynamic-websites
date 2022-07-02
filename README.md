@@ -1,7 +1,7 @@
 ## CloudFront Dynamic Content Websites
 [Amazon CloudFront](https://aws.amazon.com/cloudfront/) can also be used for [dynamic content delivery](https://aws.amazon.com/cloudfront/dynamic-content/). These are sites with personalized and dynamic web content that are not cacheable.  Examples include blog, e-commerce, news, travel and retail web sites.
 
-While dynamic content are not cacheable on CloudFront edge locations, static content embeded in the web pages (such as javascript, stylesheets and images) can be cached by CloudFront for performance. However, configuring caching requires custom configuration of cache policies for different file types. 
+While dynamic content are not cacheable on CloudFront edge locations, static content in web pages (such as javascript, stylesheets, fonts and images) can be cached by CloudFront for performance. However, additional custom cache policies is required for different file types. 
 
 This repository provides a starter [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template that can be used to provision a secure and higher performance CloudFront distribution for dynamic content websites.
 
@@ -19,12 +19,12 @@ To cache bust, new versions can be as follows
 1. `/path/example.js?version=2`
 1. `/path/example.jpg?2`
 
-While first entry can use CloudFront's [CachingOptimized](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html) managed cache policy, the rest requires custom cache policy with [query string parameters](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/QueryStringParameters.html) to ensure that CloudFront do not cache out-dated content. The cache policies to be used are therefore
+While first entry can use CloudFront's [CachingOptimized](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html) managed cache policy, the rest requires custom cache policy with [query string parameters](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/QueryStringParameters.html) to ensure that CloudFront do not cache outdated content. The cache policies to be used are therefore
 
 1. Default: [CachingDisabled] managed policy
 1. *.css: [CachingOptimized] managed policy
-1. *.js: Custom cache policy with query string `version` in Cache key
-1. *.jpg Custom cache policy with all query strings in Cache key 
+1. *.js: Custom cache policy with query string `version` in cache key
+1. *.jpg Custom cache policy with all query strings in cache key 
 
 
 
@@ -34,7 +34,7 @@ The CloudFormation template allows users to select type of cache policy for comm
 ![CloudFormation config](/images/Architecture.png "Architecture")
 
 ## Deployment via CloudFormation console
-Download [template](template.yaml) file and login to AWS [CloudFormation console](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template). Choose **Create Stack**, **Upload a template file**, **Choose File**, select your .YAML file and choose **Next**.
+Download [template](template.yaml) file and login to AWS [CloudFormation console](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template). Choose **Create Stack**, **Upload a template file**, **Choose File**, select your downloaded file and choose **Next**.
 
 
 Specify a **Stack name** and specify parameters values. All fields are required. You will need to enter origin domain name and configure cache policy accordingly for each file type. 

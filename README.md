@@ -30,15 +30,16 @@ While first entry can use CloudFront's [CachingOptimized](https://docs.aws.amazo
 
 ## CloudFront configuration overview
 The CloudFormation template allows users to select type of cache policy for common static content file types and configure CloudFront distribution settings as illustrated below
-![CloudFormation config](../images/Architecture.png "Architecture")
+https://github.com/aws-samples/amazon-cloudfront-dynamic-websites/blob/main/images/Architecture.png?raw=true
+![CloudFormation config](/images/Architecture.png "Architecture")
 
 ## Deployment via CloudFormation console
 Download [template](template.yaml) file and login to AWS [CloudFormation console](https://console.aws.amazon.com/cloudformation/home#/stacks/create/template). Choose **Create Stack**, **Upload a template file**, **Choose File**, select your .YAML file and choose **Next**.
 
 
 Specify a **Stack name** and specify parameters values. All fields are required. You will need to enter origin domain name and configure cache policy accordingly for each file type. 
-![CloudFormation parameters](../images/CloudFormation-1.png "Parameters")
-![CloudFormation parameters](../images/CloudFormation-2.png "Parameters")
+![CloudFormation parameters](/images/CloudFormation-1.png "Parameters")
+![CloudFormation parameters](/images/CloudFormation-2.png "Parameters")
 
 
 
@@ -46,10 +47,10 @@ Specify a **Stack name** and specify parameters values. All fields are required.
 It usually take up to 5 minutes to provision. After your stack has been successfully created, its status changes to **CREATE_COMPLETE**.
 
 Go to **Outputs** tab where you can navigate to created CloudFront distribution and CloudFront console
-![Outputs](../images/Outputs.png "Outputs")
+![Outputs](/images/Outputs.png "Outputs")
 
 Navigate to **CloudFront console**, **Behaviors** to verify settings for differnt file types
-![Behaviors](../images/Behaviors.png "Behaviors")
+![Behaviors](/images/Behaviors.png "Behaviors")
 
 ## Security features
 The following security features are enabled

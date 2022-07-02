@@ -30,7 +30,7 @@ While first entry can use CloudFront's [CachingOptimized](https://docs.aws.amazo
 
 ## CloudFront configuration overview
 The CloudFormation template allows users to select type of cache policy for common static content file types and configure CloudFront distribution settings as illustrated below
-https://github.com/aws-samples/amazon-cloudfront-dynamic-websites/blob/main/images/Architecture.png?raw=true
+
 ![CloudFormation config](/images/Architecture.png "Architecture")
 
 ## Deployment via CloudFormation console

@@ -44,7 +44,7 @@ Specify a **Stack name** and specify parameters values. All fields are required.
 
 
 
-It usually take up to 5 minutes to provision. After your stack has been successfully created, its status changes to **CREATE_COMPLETE**.
+It usually takes up to 10 minutes to provision. After your stack has been successfully created, its status changes to **CREATE_COMPLETE**.
 
 Go to **Outputs** tab where you can navigate to created CloudFront distribution and CloudFront console
 ![Outputs](/images/Outputs.png "Outputs")

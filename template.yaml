@@ -87,17 +87,15 @@ Metadata:
 
 Parameters:
   originDomainName:
-    # Description: Origin's domain name
     Type: String
-
+    ConstraintDescription: Do specify a valid value
+    AllowedPattern: ".+"
   queryStringToCache:
-    # Description: Query strings to use in cache key separated by commas
     Type: String
     Default: version,ver,itok,hash
 
   defaultCachePolicy:
     Type: String
-    #Description: Default cache policy for website
     AllowedValues:
       - CachingOptimized      
       - CachingDisabled
@@ -126,11 +124,10 @@ Parameters:
     AllowedValues:
       - "Yes"
       - "No"
-    Default: "Yes"
+    Default: "No"
     
   cssCachePolicy:
     Type: String
-    # Description: Cache policy for .CSS files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -138,7 +135,6 @@ Parameters:
     Default: CachingOptimized
   icoCachePolicy:
     Type: String
-    # Description: Cache policy for .ICO files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -146,7 +142,6 @@ Parameters:
     Default: CachingOptimized
   gifCachePolicy:
     Type: String
-    # Description: Cache policy for .GIF files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -154,7 +149,6 @@ Parameters:
     Default: CachingOptimized
   jsCachePolicy:
     Type: String
-    #Description: Cache policy for .JS files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -162,7 +156,6 @@ Parameters:
     Default: CachingOptimized
   jpgCachePolicy:
     Type: String
-    #Description: Cache policy for .JPG files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -170,7 +163,6 @@ Parameters:
     Default: CachingOptimized
   pngCachePolicy:
     Type: String
-    #Description: Cache policy for .PNG files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -178,7 +170,6 @@ Parameters:
     Default: CachingOptimized
   svgCachePolicy:
     Type: String
-    #Description: Cache policy for .SVG files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -186,7 +177,6 @@ Parameters:
     Default: CachingOptimized    
   webpCachePolicy:
     Type: String
-    #Description: Cache policy for .WEBP files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -194,7 +184,6 @@ Parameters:
     Default: CachingOptimized  
   woff2CachePolicy:
     Type: String
-    #Description: Cache policy for .SVG files
     AllowedValues:
       - CachingOptimized      
       - CacheByAllQueryStrings
@@ -204,7 +193,7 @@ Parameters:
 Conditions:
   defaultOptimized: !Equals [ !Ref defaultCachePolicy, "CachingOptimized"]
   defaultDisabled: !Equals [ !Ref defaultCachePolicy, "CachingDisabled"]
-  defaultAllQueryString: !Equals [ !Ref defaultCachePolicy, "CacheByAllQueryStrings"]
+  defaultAllQueryStrings: !Equals [ !Ref defaultCachePolicy, "CacheByAllQueryStrings"]
 
   cssOptimized: !Equals [ !Ref cssCachePolicy, "CachingOptimized"]
   cssAllQueryString: !Equals [ !Ref cssCachePolicy, "CacheByAllQueryStrings"]
@@ -277,7 +266,7 @@ Resources:
           - "HEAD"
           - "GET"
           Compress: true
-          CachePolicyId: !If [ defaultOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [defaultDisabled, "4135ea2d-6df8-44a3-9df3-4b5a84be39ad", !If [defaultAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]]
+          CachePolicyId: !If [ defaultOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [defaultDisabled, "4135ea2d-6df8-44a3-9df3-4b5a84be39ad", !If [defaultAllQueryStrings, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]]
           OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3"
           ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
           TargetOriginId: !Ref originDomainName

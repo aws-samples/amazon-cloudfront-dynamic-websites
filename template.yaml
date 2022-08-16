@@ -371,7 +371,7 @@ Resources:
           GeoRestriction: 
             RestrictionType: "none"
         WebACLId: !If [webACL, !GetAtt WAFv2WebACL.Arn, !Ref AWS::NoValue]
-        HttpVersion: "http2"
+        HttpVersion: "http2and3"
         DefaultRootObject: ""
         IPV6Enabled: true
       Tags:

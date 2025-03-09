@@ -1,18 +1,19 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Creates CloudFront distribution with cache policy for different file types and WAF web ACL (optional). "
+Description: CloudFront with custom cache policy by file type ( https://github.com/aws-samples/amazon-cloudfront-dynamic-websites ) (uksb-thizb1g4zs)
+Transform: "AWS::LanguageExtensions"
 
 Metadata:
   License:
     Description: >
       Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
       SPDX-License-Identifier: MIT-0
-      
+
       Permission is hereby granted, free of charge, to any person obtaining a copy of this
       software and associated documentation files (the "Software"), to deal in the Software
       without restriction, including without limitation the rights to use, copy, modify,
       merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
       permit persons to whom the Software is furnished to do so.
-      
+
       THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
       INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
       PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
@@ -20,28 +21,24 @@ Metadata:
       OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
       SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-  AWS::CloudFormation::Interface: 
+  AWS::CloudFormation::Interface:
     ParameterGroups:
-      -
-        Label:
+      - Label:
           default: CloudFront origin
         Parameters:
           - originDomainName
           - originProtocol
           - defaultCachePolicy
           - allowedHttpMethods
-      -
-        Label:
+      - Label:
           default: Create WAF web ACL. Note! If enabled, deploy this stack in us-east-1 (N.Virginia) region only
         Parameters:
           - createWebAcl
-      -
-        Label:
+      - Label:
           default: CustomQueryString cache policy
         Parameters:
           - queryStringToCache
-      -
-        Label:
+      - Label:
           default: Cache policy by type
         Parameters:
           - cssCachePolicy
@@ -53,7 +50,7 @@ Metadata:
           - svgCachePolicy
           - webpCachePolicy
           - woff2CachePolicy
-    ParameterLabels: 
+    ParameterLabels:
       originDomainName:
         default: "What is the origin domain name?"
       originProtocol:
@@ -80,7 +77,7 @@ Metadata:
         default: "Cache policy for .PNG files"
       svgCachePolicy:
         default: "Cache policy for .SVG files"
-      webpCachePolicy: 
+      webpCachePolicy:
         default: "Cache policy for .WEBP files"
       woff2CachePolicy:
         default: "Cache policy for .WOFF2 files"
@@ -97,24 +94,24 @@ Parameters:
   defaultCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CachingDisabled
       - CacheByAllQueryStrings
-      - CacheByCustomQueryString      
+      - CacheByCustomQueryString
     Default: CachingDisabled
 
   allowedHttpMethods:
     Type: String
     AllowedValues:
-      - GET-and-HEAD      
+      - GET-and-HEAD
       - GET-HEAD-and-OPTIONS
-      - GET-HEAD-OPTIONS-PUT-PATCH-POST-and-DELETE 
-    Default: GET-and-HEAD  
+      - GET-HEAD-OPTIONS-PUT-PATCH-POST-and-DELETE
+    Default: GET-and-HEAD
 
   originProtocol:
     Type: String
-    AllowedValues:   
-      - HTTP-only  
+    AllowedValues:
+      - HTTP-only
       - HTTPS-only
       - Match-viewer
     Default: HTTP-only
@@ -125,104 +122,105 @@ Parameters:
       - "Yes"
       - "No"
     Default: "No"
-    
+
   cssCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
     Default: CachingOptimized
   icoCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
     Default: CachingOptimized
   gifCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
     Default: CachingOptimized
   jsCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
     Default: CachingOptimized
   jpgCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
     Default: CachingOptimized
   pngCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
     Default: CachingOptimized
   svgCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
-    Default: CachingOptimized    
+    Default: CachingOptimized
   webpCachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
-    Default: CachingOptimized  
+    Default: CachingOptimized
   woff2CachePolicy:
     Type: String
     AllowedValues:
-      - CachingOptimized      
+      - CachingOptimized
       - CacheByAllQueryStrings
       - CacheByCustomQueryString
     Default: CachingOptimized
 
 Conditions:
-  defaultOptimized: !Equals [ !Ref defaultCachePolicy, "CachingOptimized"]
-  defaultDisabled: !Equals [ !Ref defaultCachePolicy, "CachingDisabled"]
-  defaultAllQueryStrings: !Equals [ !Ref defaultCachePolicy, "CacheByAllQueryStrings"]
+  defaultOptimized: !Equals [!Ref defaultCachePolicy, "CachingOptimized"]
+  defaultDisabled: !Equals [!Ref defaultCachePolicy, "CachingDisabled"]
+  defaultAllQueryStrings:
+    !Equals [!Ref defaultCachePolicy, "CacheByAllQueryStrings"]
 
-  cssOptimized: !Equals [ !Ref cssCachePolicy, "CachingOptimized"]
-  cssAllQueryString: !Equals [ !Ref cssCachePolicy, "CacheByAllQueryStrings"]
+  cssOptimized: !Equals [!Ref cssCachePolicy, "CachingOptimized"]
+  cssAllQueryString: !Equals [!Ref cssCachePolicy, "CacheByAllQueryStrings"]
 
-  gifOptimized: !Equals [ !Ref gifCachePolicy, "CachingOptimized"]
-  gifAllQueryString: !Equals [ !Ref gifCachePolicy, "CacheByAllQueryStrings"]
+  gifOptimized: !Equals [!Ref gifCachePolicy, "CachingOptimized"]
+  gifAllQueryString: !Equals [!Ref gifCachePolicy, "CacheByAllQueryStrings"]
 
-  icoOptimized: !Equals [ !Ref icoCachePolicy, "CachingOptimized"]
-  icoAllQueryString: !Equals [ !Ref icoCachePolicy, "CacheByAllQueryStrings"]
+  icoOptimized: !Equals [!Ref icoCachePolicy, "CachingOptimized"]
+  icoAllQueryString: !Equals [!Ref icoCachePolicy, "CacheByAllQueryStrings"]
 
-  jsOptimized: !Equals [ !Ref jsCachePolicy, "CachingOptimized"]
-  jsAllQueryString: !Equals [ !Ref jsCachePolicy, "CacheByAllQueryStrings"]
+  jsOptimized: !Equals [!Ref jsCachePolicy, "CachingOptimized"]
+  jsAllQueryString: !Equals [!Ref jsCachePolicy, "CacheByAllQueryStrings"]
 
-  jpgOptimized: !Equals [ !Ref jpgCachePolicy, "CachingOptimized"]
-  jpgAllQueryString: !Equals [ !Ref jpgCachePolicy, "CacheByAllQueryStrings"]
+  jpgOptimized: !Equals [!Ref jpgCachePolicy, "CachingOptimized"]
+  jpgAllQueryString: !Equals [!Ref jpgCachePolicy, "CacheByAllQueryStrings"]
 
-  pngOptimized: !Equals [ !Ref pngCachePolicy, "CachingOptimized"]
-  pngAllQueryString: !Equals [ !Ref pngCachePolicy, "CacheByAllQueryStrings"]
+  pngOptimized: !Equals [!Ref pngCachePolicy, "CachingOptimized"]
+  pngAllQueryString: !Equals [!Ref pngCachePolicy, "CacheByAllQueryStrings"]
 
-  svgOptimized: !Equals [ !Ref svgCachePolicy, "CachingOptimized"]
-  svgAllQueryString: !Equals [ !Ref svgCachePolicy, "CacheByAllQueryStrings"]
+  svgOptimized: !Equals [!Ref svgCachePolicy, "CachingOptimized"]
+  svgAllQueryString: !Equals [!Ref svgCachePolicy, "CacheByAllQueryStrings"]
 
-  webpOptimized: !Equals [ !Ref webpCachePolicy, "CachingOptimized"]
-  webpAllQueryString: !Equals [ !Ref webpCachePolicy, "CacheByAllQueryStrings"]
+  webpOptimized: !Equals [!Ref webpCachePolicy, "CachingOptimized"]
+  webpAllQueryString: !Equals [!Ref webpCachePolicy, "CacheByAllQueryStrings"]
 
-  woff2Optimized: !Equals [ !Ref woff2CachePolicy, "CachingOptimized"]
-  woff2AllQueryString: !Equals [ !Ref woff2CachePolicy, "CacheByAllQueryStrings"]
+  woff2Optimized: !Equals [!Ref woff2CachePolicy, "CachingOptimized"]
+  woff2AllQueryString: !Equals [!Ref woff2CachePolicy, "CacheByAllQueryStrings"]
 
-  webACL: !Equals [ !Ref createWebAcl, "Yes"]
+  webACL: !Equals [!Ref createWebAcl, "Yes"]
 
 Mappings:
   AllowedHttpMethods:
@@ -240,135 +238,233 @@ Mappings:
     Match-viewer:
       protocol: "match-viewer"
 
+  ConsoleUrl:
+    aws:
+      url: console.aws.amazon.com
+    aws-cn:
+      url: console.amazonaws.cn
+    aws-gov:
+      url: console.amazonaws-us-gov.com
+
 Resources:
   CloudFrontDistribution:
     Type: "AWS::CloudFront::Distribution"
     Properties:
-      DistributionConfig: 
-        Origins: 
-        - 
-          ConnectionAttempts: 3
-          ConnectionTimeout: 10
-          CustomOriginConfig: 
-            HTTPPort: 80
-            HTTPSPort: 443
-            OriginKeepaliveTimeout: 5
-            OriginProtocolPolicy: !FindInMap [OriginProtocol, !Ref originProtocol, protocol]
-            OriginReadTimeout: 30
-            OriginSSLProtocols: 
-            - "TLSv1.2"
-          DomainName: !Ref originDomainName
-          Id: !Ref originDomainName
-          OriginPath: ""
-        DefaultCacheBehavior: 
-          AllowedMethods: !Split [",", !FindInMap [AllowedHttpMethods, !Ref allowedHttpMethods, Methods]]
-          CachedMethods: 
-          - "HEAD"
-          - "GET"
+      DistributionConfig:
+        Origins:
+          - ConnectionAttempts: 3
+            ConnectionTimeout: 10
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginKeepaliveTimeout: 5
+              OriginProtocolPolicy:
+                !FindInMap [OriginProtocol, !Ref originProtocol, protocol]
+              OriginReadTimeout: 30
+              OriginSSLProtocols:
+                - "TLSv1.2"
+            DomainName: !Ref originDomainName
+            Id: !Ref originDomainName
+            OriginPath: ""
+        DefaultCacheBehavior:
+          AllowedMethods:
+            !Split [
+              ",",
+              !FindInMap [AllowedHttpMethods, !Ref allowedHttpMethods, Methods],
+            ]
+          CachedMethods:
+            - "HEAD"
+            - "GET"
           Compress: true
-          CachePolicyId: !If [ defaultOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [defaultDisabled, "4135ea2d-6df8-44a3-9df3-4b5a84be39ad", !If [defaultAllQueryStrings, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]]
+          CachePolicyId:
+            !If [
+              defaultOptimized,
+              "658327ea-f89d-4fab-a63d-7e88639e58f6",
+              !If [
+                defaultDisabled,
+                "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+                !If [
+                  defaultAllQueryStrings,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ],
+            ]
           OriginRequestPolicyId: "216adef6-5c7f-47e4-b989-5492eafa07d3"
           ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
           TargetOriginId: !Ref originDomainName
           ViewerProtocolPolicy: "redirect-to-https"
-        CacheBehaviors: 
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: true
-          CachePolicyId: !If [cssOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [cssAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.css"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: true
-          CachePolicyId: !If [gifOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [gifAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.gif"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: true
-          CachePolicyId: !If [icoOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [icoAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.ico"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: false
-          CachePolicyId:  !If [jpgOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [jpgAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.jpg"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: true
-          CachePolicyId: !If [jsOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [jsAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.js"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: false
-          CachePolicyId: !If [pngOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [pngAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.png"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: true
-          CachePolicyId: !If [svgOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [svgAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.svg"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: true
-          CachePolicyId: !If [webpOptimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [webpAllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.webp"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
-        - 
-          AllowedMethods: 
-          - "HEAD"
-          - "GET"
-          Compress: true
-          CachePolicyId: !If [woff2Optimized, "658327ea-f89d-4fab-a63d-7e88639e58f6", !If [woff2AllQueryString, !Ref AllQueryStringsCachePolicy, !Ref CustomQueryStringCachePolicy ] ]
-          ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
-          PathPattern: "*.woff2"
-          TargetOriginId: !Ref originDomainName
-          ViewerProtocolPolicy: "redirect-to-https"
+        CacheBehaviors:
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: true
+            CachePolicyId:
+              !If [
+                cssOptimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  cssAllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.css"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: true
+            CachePolicyId:
+              !If [
+                gifOptimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  gifAllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.gif"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: true
+            CachePolicyId:
+              !If [
+                icoOptimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  icoAllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.ico"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: false
+            CachePolicyId:
+              !If [
+                jpgOptimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  jpgAllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.jpg"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: true
+            CachePolicyId:
+              !If [
+                jsOptimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  jsAllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.js"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: false
+            CachePolicyId:
+              !If [
+                pngOptimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  pngAllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.png"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: true
+            CachePolicyId:
+              !If [
+                svgOptimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  svgAllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.svg"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: true
+            CachePolicyId:
+              !If [
+                webpOptimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  webpAllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.webp"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
+          - AllowedMethods:
+              - "HEAD"
+              - "GET"
+            Compress: true
+            CachePolicyId:
+              !If [
+                woff2Optimized,
+                "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                !If [
+                  woff2AllQueryString,
+                  !Ref AllQueryStringsCachePolicy,
+                  !Ref CustomQueryStringCachePolicy,
+                ],
+              ]
+            ResponseHeadersPolicyId: "67f7725c-6f97-4210-82d7-5512b31e9d03"
+            PathPattern: "*.woff2"
+            TargetOriginId: !Ref originDomainName
+            ViewerProtocolPolicy: "redirect-to-https"
         Comment: !Sub "${AWS::StackName}"
         PriceClass: "PriceClass_All"
         Enabled: true
-        ViewerCertificate: 
+        ViewerCertificate:
           CloudFrontDefaultCertificate: true
-        Restrictions: 
-          GeoRestriction: 
+          MinimumProtocolVersion: TLSv1.2_2021
+        Restrictions:
+          GeoRestriction:
             RestrictionType: "none"
         WebACLId: !If [webACL, !GetAtt WAFv2WebACL.Arn, !Ref AWS::NoValue]
         HttpVersion: "http2and3"
@@ -376,46 +472,60 @@ Resources:
         IPV6Enabled: true
       Tags:
         - Key: StackName
-          Value: !Sub ${AWS::StackName}
+          Value: !Ref AWS::StackName
         - Key: StackId
-          Value: !Sub ${AWS::StackId}
+          Value: !Ref AWS::StackId
+        - Key: GitHub
+          Value: https://github.com/aws-samples/amazon-cloudfront-dynamic-websites
 
   AllQueryStringsCachePolicy:
     Type: "AWS::CloudFront::CachePolicy"
     Properties:
-      CachePolicyConfig: 
-        Name: !Sub "${AWS::StackName}-AllQueryStrings"
+      CachePolicyConfig:
+        Name: !Sub
+          - "${AWS::StackName}-All-QueryStrings-${UID}"
+          - UID:
+              !Select [
+                3,
+                !Split ["-", !Select [2, !Split ["/", !Ref AWS::StackId]]],
+              ]
         Comment: "Cache by all query strings"
         DefaultTTL: 86400
         MaxTTL: 31536000
         MinTTL: 1
-        ParametersInCacheKeyAndForwardedToOrigin: 
+        ParametersInCacheKeyAndForwardedToOrigin:
           EnableAcceptEncodingGzip: true
           EnableAcceptEncodingBrotli: true
-          CookiesConfig: 
+          CookiesConfig:
             CookieBehavior: "none"
-          HeadersConfig: 
+          HeadersConfig:
             HeaderBehavior: "none"
-          QueryStringsConfig: 
+          QueryStringsConfig:
             QueryStringBehavior: "all"
 
   CustomQueryStringCachePolicy:
     Type: "AWS::CloudFront::CachePolicy"
     Properties:
-      CachePolicyConfig: 
-        Name: !Sub "${AWS::StackName}-CustomQueryStrings"
+      CachePolicyConfig:
+        Name: !Sub
+          - "${AWS::StackName}-Custom-QueryStrings-${UID}"
+          - UID:
+              !Select [
+                3,
+                !Split ["-", !Select [2, !Split ["/", !Ref AWS::StackId]]],
+              ]
         Comment: "Cache by specific query strings"
         DefaultTTL: 86400
         MaxTTL: 31536000
         MinTTL: 1
-        ParametersInCacheKeyAndForwardedToOrigin: 
+        ParametersInCacheKeyAndForwardedToOrigin:
           EnableAcceptEncodingGzip: true
           EnableAcceptEncodingBrotli: true
-          CookiesConfig: 
+          CookiesConfig:
             CookieBehavior: "none"
-          HeadersConfig: 
+          HeadersConfig:
             HeaderBehavior: "none"
-          QueryStringsConfig: 
+          QueryStringsConfig:
             QueryStringBehavior: "whitelist"
             QueryStrings: !Split [",", !Ref queryStringToCache]
 
@@ -424,90 +534,96 @@ Resources:
     Condition: webACL
     Properties:
       Name: !Sub "${AWS::StackName}-WebACL"
-      Description: !Sub '${AWS::StackName}'
-      DefaultAction: 
+      Description: !Sub "${AWS::StackName}"
+      DefaultAction:
         Allow: {}
-      VisibilityConfig: 
+      VisibilityConfig:
         SampledRequestsEnabled: true
         CloudWatchMetricsEnabled: true
         MetricName: !Sub "${AWS::StackName}-WebACL"
       Scope: "CLOUDFRONT"
-      Rules: 
-      - 
-        Name: "Rate-based_Rule"
-        Priority: 2
-        Action: 
-          Block: {}
-        Statement: 
-          RateBasedStatement: 
-            Limit: 2000
-            AggregateKeyType: "IP"
-        VisibilityConfig: 
-          SampledRequestsEnabled: true
-          CloudWatchMetricsEnabled: true
-          MetricName: "Rate-based_Rule"
-      - 
-        Name: "AWS-AWSManagedRulesAmazonIpReputationList"
-        Priority: 3
-        OverrideAction: 
-          None: {}
-        Statement: 
-          ManagedRuleGroupStatement: 
-            VendorName: "AWS"
-            Name: "AWSManagedRulesAmazonIpReputationList"
-        VisibilityConfig: 
-          SampledRequestsEnabled: true
-          CloudWatchMetricsEnabled: true
-          MetricName: "AWS-AWSManagedRulesAmazonIpReputationList"
-      - 
-        Name: "AWS-AWSManagedRulesAnonymousIpList"
-        Priority: 4
-        OverrideAction: 
-          None: {}
-        Statement: 
-          ManagedRuleGroupStatement: 
-            VendorName: "AWS"
-            Name: "AWSManagedRulesAnonymousIpList"
-        VisibilityConfig: 
-          SampledRequestsEnabled: true
-          CloudWatchMetricsEnabled: true
-          MetricName: "AWS-AWSManagedRulesAnonymousIpList"
-      - 
-        Name: "AWS-AWSManagedRulesCommonRuleSet"
-        Priority: 5
-        OverrideAction: 
-          None: {}
-        Statement: 
-          ManagedRuleGroupStatement: 
-            VendorName: "AWS"
-            Name: "AWSManagedRulesCommonRuleSet"
-        VisibilityConfig: 
-          SampledRequestsEnabled: true
-          CloudWatchMetricsEnabled: true
-          MetricName: "AWS-AWSManagedRulesCommonRuleSet"
-      - 
-        Name: "AWS-AWSManagedRulesKnownBadInputsRuleSet"
-        Priority: 6
-        OverrideAction: 
-          None: {}
-        Statement: 
-          ManagedRuleGroupStatement: 
-            VendorName: "AWS"
-            Name: "AWSManagedRulesKnownBadInputsRuleSet"
-        VisibilityConfig: 
-          SampledRequestsEnabled: true
-          CloudWatchMetricsEnabled: true
-          MetricName: "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+      Rules:
+        - Name: "Rate-based_Rule"
+          Priority: 2
+          Action:
+            Block: {}
+          Statement:
+            RateBasedStatement:
+              Limit: 2000
+              AggregateKeyType: "IP"
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "Rate-based_Rule"
+        - Name: "AWS-AWSManagedRulesAmazonIpReputationList"
+          Priority: 3
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: "AWS"
+              Name: "AWSManagedRulesAmazonIpReputationList"
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "AWS-AWSManagedRulesAmazonIpReputationList"
+        - Name: "AWS-AWSManagedRulesAnonymousIpList"
+          Priority: 4
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: "AWS"
+              Name: "AWSManagedRulesAnonymousIpList"
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "AWS-AWSManagedRulesAnonymousIpList"
+        - Name: "AWS-AWSManagedRulesCommonRuleSet"
+          Priority: 5
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: "AWS"
+              Name: "AWSManagedRulesCommonRuleSet"
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "AWS-AWSManagedRulesCommonRuleSet"
+        - Name: "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+          Priority: 6
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: "AWS"
+              Name: "AWSManagedRulesKnownBadInputsRuleSet"
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "AWS-AWSManagedRulesKnownBadInputsRuleSet"
       Tags:
         - Key: StackName
-          Value: !Sub ${AWS::StackName}
+          Value: !Ref AWS::StackName
         - Key: StackId
-          Value: !Sub ${AWS::StackId}
+          Value: !Ref AWS::StackId
+        - Key: GitHub
+          Value: https://github.com/aws-samples/amazon-cloudfront-dynamic-websites
 
 Outputs:
   CloudFrontURL:
     Description: CloudFront distribution URL
-    Value: !Sub 'https://${CloudFrontDistribution.DomainName}'
+    Value: !Sub "https://${CloudFrontDistribution.DomainName}"
+
   CloudFrontConsole:
     Description: CloudFront console
-    Value: !Sub 'https://console.aws.amazon.com/cloudfront/home#/distributions/${CloudFrontDistribution.Id}'
+    Value: !Sub
+      - "https://${url}/cloudfront/home#/distributions/${CloudFrontDistribution.Id}"
+      - url:
+          !FindInMap [
+            ConsoleUrl,
+            !Ref "AWS::Partition",
+            url,
+            DefaultValue: "console.aws.amazon.com",
+          ]
